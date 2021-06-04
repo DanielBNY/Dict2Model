@@ -5,16 +5,16 @@ DISABLE_PATH_EXCEPTIONS = "DISABLE_PATH_EXCEPTIONS"
 
 SOURCE_NAMING_EXCEPTION_MESSAGE = f"""
 Each variable is required to have a source. 
-The source naming is the normal variable name plus {SOURCE_SUFFIX}
+The source naming is the normal variable name in upper case plus {SOURCE_SUFFIX}
 
-An example for a correct class:
+For example:
 
 class ExampleObj:
     number: int
     question: bool
 
-    NUMBER{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}number"
-    QUESTION{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}question"
+    NUMBER{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}number"              <----------- Sources
+    QUESTION{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}question"       <-----------
 
 
 If the variable NUMBER{SOURCE_SUFFIX} would change to NUMBER_
