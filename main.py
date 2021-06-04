@@ -34,8 +34,25 @@ dict_input_test = {
 }
 
 
-def is_valid_variable_names(annotations_names, global_dict):
-    for name in annotations_names:
-        if f"{name.upper()}_SOURCE" not in global_dict:
-            raise Exception(SOURCE_NAMING_EXCEPTION_MESSAGE)
-    return True
+class SpecialDictModel:
+
+    def __init__(self, input_class, input_data):
+        self.input_class = input_class
+        self.class_attr = self.input_class.__dict__
+        self.class_annotations = self.class_attr.get('__annotations__')
+        self.input_data = input_data
+
+    def run(self):
+        self.validate_usages_in_class()
+        return self.input_class
+
+    # Usages Validations
+
+    def validate_usages_in_class(self):
+        self.is_valid_variable_names()
+
+    def is_valid_variable_names(self):
+        for name in self.class_annotations:
+            if f"{name.upper()}_SOURCE" not in self.class_attr:
+                raise Exception(SOURCE_NAMING_EXCEPTION_MESSAGE)
+        return True
