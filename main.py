@@ -33,6 +33,18 @@ to disable exception for none existing path in dictionary add:
 If such configuration is added the class attribute value for the non existing value in the dictionary will be 'None'.
 """
 
+ANNOTATION_VARIABLE_EXPLANATION = f"""
+Attribute with the required type in an annotation format - (variable: type)
+Example inside a class:
+
+class ExampleObj:
+    number: int         <-------- annotation
+    question: bool   <------  
+
+    NUMBER{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}number"
+    QUESTION{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}question"
+"""
+
 
 class DictionaryModel:
 
@@ -77,9 +89,15 @@ class DictionaryModel:
     # Usages Validations
 
     def _validate_usages_in_class(self):
+        self._validate_annotation_existence()
         self._validate_dict_input()
         self._validate_source_existence()
         self._validate_source_type_str()
+
+    def _validate_annotation_existence(self):
+        if not self.class_annotations:
+            raise Exception(f"\nNo annotation variables in {self.input_class}.\n"
+                            f"{ANNOTATION_VARIABLE_EXPLANATION}")
 
     def _validate_dict_input(self):
         if type(self.input_dict) is not dict:
