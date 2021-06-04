@@ -36,11 +36,11 @@ If such configuration is added the class attribute value for the non existing va
 
 class DictionaryModel:
 
-    def __init__(self, input_class, input_data):
+    def __init__(self, input_class, input_dict: dict):
         self.input_class = input_class
         self.class_attr = self.input_class.__dict__
         self.class_annotations = self.class_attr.get('__annotations__')
-        self.input_data = input_data
+        self.input_dict = input_dict
         self.disable_type_exception = bool(self.class_attr.get(DISABLE_TYPE_EXCEPTIONS))
         self.disable_path_exception = bool(self.class_attr.get(DISABLE_PATH_EXCEPTIONS))
 
@@ -65,20 +65,25 @@ class DictionaryModel:
     def _get_input_from_source(self, variable_name):
         source = self.class_attr.get(f"{variable_name.upper()}{SOURCE_SUFFIX}")
         split_source = source.split(SOURCE_SEPARATION_CHAR)
-        data = self.input_data
+        data = self.input_dict
         for part in split_source:
             if data:
                 data = data.get(part)
                 if (data is None) and (not self.disable_path_exception):
-                    raise Exception(f"\nThe path {str(split_source)} in dict {self.input_data} don't exist\n"
+                    raise Exception(f"\nThe path {str(split_source)} in dict {self.input_dict} don't exist\n"
                                     f"{SOURCE_FORMAT_EXPLANATION}")
         return data
 
     # Usages Validations
 
     def _validate_usages_in_class(self):
+        self._validate_dict_input()
         self._validate_source_existence()
         self._validate_source_type_str()
+
+    def _validate_dict_input(self):
+        if type(self.input_dict) is not dict:
+            raise Exception(f"\nThe given input is not in type <class 'dict'> but in type '{type(self.input_dict)}'")
 
     def _validate_source_existence(self):
         for name in self.class_annotations:
