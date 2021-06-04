@@ -36,6 +36,8 @@ class SpecialDictModel:
         self.class_attr = self.input_class.__dict__
         self.class_annotations = self.class_attr.get('__annotations__')
         self.input_data = input_data
+        self.disable_type_exception = bool(self.class_attr.get("DISABLE_TYPE_EXCEPTIONS"))
+        self.disable_path_exception = bool(self.class_attr.get("DISABLE_PATH_EXCEPTIONS"))
 
     def run(self):
         self._validate_usages_in_class()
@@ -49,7 +51,7 @@ class SpecialDictModel:
             if type(variable_input) is annotation_type:
                 setattr(self.input_class, variable_name, variable_input)
             else:
-                if self.class_attr.get("DISABLE_TYPE_EXCEPTIONS"):
+                if self.disable_type_exception:
                     setattr(self.input_class, variable_name, None)
                 else:
                     type_exception(expected_type=annotation_type, variable_name=variable_name,
@@ -62,6 +64,8 @@ class SpecialDictModel:
         for part in split_source:
             if data:
                 data = data.get(part)
+                if (data is None) and (not self.disable_path_exception):
+                    raise Exception(f"\nThe path {str(split_source)} in dict {self.input_data} don't exist")
         return data
 
     # Usages Validations
