@@ -1,5 +1,7 @@
 SOURCE_SEPARATION_CHAR = "-"
 SOURCE_SUFFIX = "_SOURCE"
+DISABLE_TYPE_EXCEPTIONS = "DISABLE_TYPE_EXCEPTIONS"
+DISABLE_PATH_EXCEPTIONS = "DISABLE_PATH_EXCEPTIONS"
 
 SOURCE_NAMING_EXCEPTION_MESSAGE = f"""
 Each variable is required to have a source. 
@@ -22,10 +24,13 @@ SOURCE_FORMAT_EXPLANATION = f"""
 The sources value format and type:
 
 The sources variable define the path inside a dictionary to get the desired value.
-For example \
-'NUMBER{SOURCE_SUFFIX} = data{SOURCE_SEPARATION_CHAR}info{SOURCE_SEPARATION_CHAR}extra{SOURCE_SEPARATION_CHAR}number' \
-is equivalent to: \n value = input_dict["data"]["info"]["extra"]["number"]
+For example: \
+NUMBER{SOURCE_SUFFIX} = 'data{SOURCE_SEPARATION_CHAR}info{SOURCE_SEPARATION_CHAR}extra{SOURCE_SEPARATION_CHAR}number' \
+is equivalent to:\nvalue = input_dict["data"]["info"]["extra"]["number"]
 
+to disable exception for none existing path in dictionary add:
+{DISABLE_PATH_EXCEPTIONS} = True
+If such configuration is added the class attribute value for the non existing value in the dictionary will be 'None'.
 """
 
 
@@ -36,8 +41,8 @@ class SpecialDictModel:
         self.class_attr = self.input_class.__dict__
         self.class_annotations = self.class_attr.get('__annotations__')
         self.input_data = input_data
-        self.disable_type_exception = bool(self.class_attr.get("DISABLE_TYPE_EXCEPTIONS"))
-        self.disable_path_exception = bool(self.class_attr.get("DISABLE_PATH_EXCEPTIONS"))
+        self.disable_type_exception = bool(self.class_attr.get(DISABLE_TYPE_EXCEPTIONS))
+        self.disable_path_exception = bool(self.class_attr.get(DISABLE_PATH_EXCEPTIONS))
 
     def run(self):
         self._validate_usages_in_class()
@@ -65,7 +70,8 @@ class SpecialDictModel:
             if data:
                 data = data.get(part)
                 if (data is None) and (not self.disable_path_exception):
-                    raise Exception(f"\nThe path {str(split_source)} in dict {self.input_data} don't exist")
+                    raise Exception(f"\nThe path {str(split_source)} in dict {self.input_data} don't exist\n"
+                                    f"{SOURCE_FORMAT_EXPLANATION}")
         return data
 
     # Usages Validations
