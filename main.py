@@ -27,13 +27,13 @@ class SpecialDictModel:
         self.input_data = input_data
 
     def run(self):
-        self.validate_usages_in_class()
-        self.insert_values_to_class()
+        self._validate_usages_in_class()
+        self._insert_values_to_class()
         return self.input_class
 
-    def insert_values_to_class(self):
+    def _insert_values_to_class(self):
         for variable_name in self.class_annotations:
-            variable_input = self.get_input_from_source(variable_name)
+            variable_input = self._get_input_from_source(variable_name)
             if type(variable_input) is self.class_annotations[variable_name]:
                 setattr(self.input_class, variable_name, variable_input)
             else:
@@ -44,7 +44,7 @@ class SpecialDictModel:
                         f"Input for variable '{variable_name}' is {variable_input} in type {type(variable_input)}, "
                         f"expected type {self.class_annotations[variable_name]}")
 
-    def get_input_from_source(self, variable_name):
+    def _get_input_from_source(self, variable_name):
         source = self.class_attr.get(f"{variable_name.upper()}_SOURCE")
         split_source = source.split(SOURCE_SEPARATION_CHAR)
         data = self.input_data
@@ -55,10 +55,10 @@ class SpecialDictModel:
 
     # Usages Validations
 
-    def validate_usages_in_class(self):
-        self.is_valid_variable_names()
+    def _validate_usages_in_class(self):
+        self._is_valid_variable_names()
 
-    def is_valid_variable_names(self):
+    def _is_valid_variable_names(self):
         for name in self.class_annotations:
             if f"{name.upper()}_SOURCE" not in self.class_attr:
                 raise Exception(SOURCE_NAMING_EXCEPTION_MESSAGE)
