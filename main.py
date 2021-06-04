@@ -1,8 +1,9 @@
 SOURCE_SEPARATION_CHAR = "-"
+SOURCE_SUFFIX = "_SOURCE"
 
 SOURCE_NAMING_EXCEPTION_MESSAGE = f"""
 Each variable is required to have a source. 
-The source naming is the normal variable name plus _SOURCE
+The source naming is the normal variable name plus {SOURCE_SUFFIX}
 
 An example for a correct class:
 
@@ -10,19 +11,20 @@ class ExampleObj:
     number: int
     question: bool
 
-    NUMBER_SOURCE = "data{SOURCE_SEPARATION_CHAR}number"
-    QUESTION_SOURCE = "data{SOURCE_SEPARATION_CHAR}question"
+    NUMBER{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}number"
+    QUESTION{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}question"
 
 
-If the variable NUMBER_SOURCE would change to NUMBER_
+If the variable NUMBER{SOURCE_SUFFIX} would change to NUMBER_
 """
 
 SOURCE_FORMAT_EXPLANATION = f"""
 The sources value format and type:
 
 The sources variable define the path inside a dictionary to get the desired value.
-For example 'NUMBER_SOURCE = data{SOURCE_SEPARATION_CHAR}info{SOURCE_SEPARATION_CHAR}extra{SOURCE_SEPARATION_CHAR}number' is equivalent to: 
-value = input_dict["data"]["info"]["extra"]["number"]
+For example \
+'NUMBER{SOURCE_SUFFIX} = data{SOURCE_SEPARATION_CHAR}info{SOURCE_SEPARATION_CHAR}extra{SOURCE_SEPARATION_CHAR}number' \
+is equivalent to: \n value = input_dict["data"]["info"]["extra"]["number"]
 
 """
 
@@ -53,7 +55,7 @@ class SpecialDictModel:
                                    variable_value=variable_input)
 
     def _get_input_from_source(self, variable_name):
-        source = self.class_attr.get(f"{variable_name.upper()}_SOURCE")
+        source = self.class_attr.get(f"{variable_name.upper()}{SOURCE_SUFFIX}")
         split_source = source.split(SOURCE_SEPARATION_CHAR)
         data = self.input_data
         for part in split_source:
@@ -69,13 +71,13 @@ class SpecialDictModel:
 
     def _validate_source_existence(self):
         for name in self.class_annotations:
-            if f"{name.upper()}_SOURCE" not in self.class_attr:
+            if f"{name.upper()}{SOURCE_SUFFIX}" not in self.class_attr:
                 raise Exception(SOURCE_NAMING_EXCEPTION_MESSAGE)
         return True
 
     def _validate_source_type_str(self):
         for attr_key in self.class_attr:
-            if "_SOURCE" in attr_key:
+            if SOURCE_SUFFIX in attr_key:
                 attr_value = self.class_attr.get(attr_key)
                 if type(attr_value) is not str:
                     type_exception(expected_type=str, variable_name=attr_key, variable_value=attr_value,
