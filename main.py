@@ -22,13 +22,12 @@ class TestObj:
 
     NUMBER_SOURCE = "data-number"  # dict source
     QUESTION_SOURCE = "data-question"  # dict source
-    QUESTION_TYPE_ERROR = Exception  # when the source does not exist
-    NUMBER_DOES_NOT_EXIST = None
+    DISABLE_TYPE_EXCEPTIONS = True
 
 
 dict_input_test = {
     "data": {
-        "number": 123,
+        "number": "123",
         "question": True
     }
 }
@@ -53,7 +52,12 @@ class SpecialDictModel:
             if type(variable_input) is self.class_annotations[variable_name]:
                 setattr(self.input_class, variable_name, variable_input)
             else:
-                setattr(self.input_class, variable_name, None)
+                if self.class_attr.get("DISABLE_TYPE_EXCEPTIONS"):
+                    setattr(self.input_class, variable_name, None)
+                else:
+                    raise TypeError(
+                        f"Input for variable '{variable_name}' is {variable_input} in type {type(variable_input)}, "
+                        f"expected type {self.class_annotations[variable_name]}")
 
     def get_input_from_source(self, variable_name):
         source = self.class_attr.get(f"{variable_name.upper()}_SOURCE")
