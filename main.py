@@ -60,7 +60,8 @@ class SpecialDictModel:
         split_source = source.split('-')
         data = self.input_data
         for part in split_source:
-            data = data.get(part)
+            if data:
+                data = data.get(part)
         return data
 
     # Usages Validations
