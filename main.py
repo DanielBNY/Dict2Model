@@ -17,11 +17,11 @@ class ExampleObj:
 If the variable NUMBER_SOURCE would change to NUMBER_
 """
 
-SOURCE_FORMAT_EXPLANATION = """
+SOURCE_FORMAT_EXPLANATION = f"""
 The sources value format and type:
 
 The sources variable define the path inside a dictionary to get the desired value.
-For example 'NUMBER_SOURCE = data-info-extra-number' is equivalent to: 
+For example 'NUMBER_SOURCE = data{SOURCE_SEPARATION_CHAR}info{SOURCE_SEPARATION_CHAR}extra{SOURCE_SEPARATION_CHAR}number' is equivalent to: 
 value = input_dict["data"]["info"]["extra"]["number"]
 
 """
