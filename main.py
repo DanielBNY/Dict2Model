@@ -1,4 +1,6 @@
-SOURCE_NAMING_EXCEPTION_MESSAGE = """
+SOURCE_SEPARATION_CHAR = "-"
+
+SOURCE_NAMING_EXCEPTION_MESSAGE = f"""
 Each variable is required to have a source. 
 The source naming is the normal variable name plus _SOURCE
 
@@ -8,8 +10,8 @@ class ExampleObj:
     number: int
     question: bool
 
-    NUMBER_SOURCE = "data-number"
-    QUESTION_SOURCE = "data-question"
+    NUMBER_SOURCE = "data{SOURCE_SEPARATION_CHAR}number"
+    QUESTION_SOURCE = "data{SOURCE_SEPARATION_CHAR}question"
 
 
 If the variable NUMBER_SOURCE would change to NUMBER_
@@ -61,7 +63,7 @@ class SpecialDictModel:
 
     def get_input_from_source(self, variable_name):
         source = self.class_attr.get(f"{variable_name.upper()}_SOURCE")
-        split_source = source.split('-')
+        split_source = source.split(SOURCE_SEPARATION_CHAR)
         data = self.input_data
         for part in split_source:
             if data:
