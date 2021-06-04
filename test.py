@@ -1,4 +1,4 @@
-from DictionaryModel import DictionaryModel
+from DictionaryModel import DictionaryModelFactory
 
 
 class TestObj:
@@ -19,6 +19,6 @@ dict_input_test = {
 
 
 def test():
-    test_obj: TestObj = DictionaryModel(TestObj, dict_input_test).run()
+    test_obj: TestObj = DictionaryModelFactory(TestObj, dict_input_test).run()
     print(test_obj.number, test_obj.question)
 test()

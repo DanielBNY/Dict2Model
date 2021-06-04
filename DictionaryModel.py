@@ -46,7 +46,7 @@ class ExampleObj:
 """
 
 
-class DictionaryModel:
+class DictionaryModelFactory:
 
     def __init__(self, input_class: type, input_dict: dict):
         self.input_class = input_class
