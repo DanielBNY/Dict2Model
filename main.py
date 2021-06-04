@@ -84,7 +84,6 @@ class DictionaryModel:
         for name in self.class_annotations:
             if f"{name.upper()}{SOURCE_SUFFIX}" not in self.class_attr:
                 raise Exception(SOURCE_NAMING_EXCEPTION_MESSAGE)
-        return True
 
     def _validate_source_type_str(self):
         for attr_key in self.class_attr:
