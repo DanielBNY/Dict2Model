@@ -18,23 +18,6 @@ If the variable NUMBER_SOURCE would change to NUMBER_
 """
 
 
-class TestObj:
-    number: int
-    question: bool
-
-    NUMBER_SOURCE = "data-number"  # dict source
-    QUESTION_SOURCE = "data-question"  # dict source
-    DISABLE_TYPE_EXCEPTIONS = True
-
-
-dict_input_test = {
-    "data": {
-        "number": "123",
-        "question": True
-    }
-}
-
-
 class SpecialDictModel:
 
     def __init__(self, input_class, input_data):
@@ -80,8 +63,3 @@ class SpecialDictModel:
             if f"{name.upper()}_SOURCE" not in self.class_attr:
                 raise Exception(SOURCE_NAMING_EXCEPTION_MESSAGE)
         return True
-
-
-def test():
-    test_obj: TestObj = SpecialDictModel(TestObj, dict_input_test).run()
-    print(test_obj.number, test_obj.question)
