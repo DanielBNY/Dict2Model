@@ -56,9 +56,9 @@ class SpecialDictModel:
     # Usages Validations
 
     def _validate_usages_in_class(self):
-        self._is_valid_variable_names()
+        self._validate_source_existence()
 
-    def _is_valid_variable_names(self):
+    def _validate_source_existence(self):
         for name in self.class_annotations:
             if f"{name.upper()}_SOURCE" not in self.class_attr:
                 raise Exception(SOURCE_NAMING_EXCEPTION_MESSAGE)
