@@ -1,4 +1,4 @@
-from main import DictionaryModel
+from DictionaryModel import DictionaryModel
 
 
 class TestObj:
