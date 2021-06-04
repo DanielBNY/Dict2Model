@@ -48,7 +48,7 @@ class ExampleObj:
 
 class DictionaryModel:
 
-    def __init__(self, input_class, input_dict: dict):
+    def __init__(self, input_class: type, input_dict: dict):
         self.input_class = input_class
         self.class_attr = self.input_class.__dict__
         self.class_annotations = self.class_attr.get('__annotations__')
