@@ -34,7 +34,7 @@ If such configuration is added the class attribute value for the non existing va
 """
 
 
-class SpecialDictModel:
+class DictionaryModel:
 
     def __init__(self, input_class, input_data):
         self.input_class = input_class

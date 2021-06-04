@@ -1,4 +1,4 @@
-from main import SpecialDictModel
+from main import DictionaryModel
 
 
 class TestObj:
@@ -19,6 +19,6 @@ dict_input_test = {
 
 
 def test():
-    test_obj: TestObj = SpecialDictModel(TestObj, dict_input_test).run()
+    test_obj: TestObj = DictionaryModel(TestObj, dict_input_test).run()
     print(test_obj.number, test_obj.question)
 test()
