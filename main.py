@@ -17,6 +17,15 @@ class ExampleObj:
 If the variable NUMBER_SOURCE would change to NUMBER_
 """
 
+SOURCE_FORMAT_EXPLANATION = """
+The sources value format and type:
+
+The sources variable define the path inside a dictionary to get the desired value.
+For example 'NUMBER_SOURCE = data-info-extra-number' is equivalent to: 
+value = input_dict["data"]["info"]["extra"]["number"]
+
+"""
+
 
 class SpecialDictModel:
 
@@ -69,7 +78,8 @@ class SpecialDictModel:
             if "_SOURCE" in attr_key:
                 attr_value = self.class_attr.get(attr_key)
                 if type(attr_value) is not str:
-                    type_exception(expected_type=str, variable_name=attr_key, variable_value=attr_value)
+                    type_exception(expected_type=str, variable_name=attr_key, variable_value=attr_value,
+                                   requirement_explanation=SOURCE_FORMAT_EXPLANATION)
 
 
 def type_exception(expected_type: type, variable_name: str, variable_value, requirement_explanation=""):
