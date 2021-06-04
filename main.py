@@ -44,14 +44,15 @@ class SpecialDictModel:
 
     def _insert_values_to_class(self):
         for variable_name in self.class_annotations:
+            annotation_type = self.class_annotations.get(variable_name)
             variable_input = self._get_input_from_source(variable_name)
-            if type(variable_input) is self.class_annotations[variable_name]:
+            if type(variable_input) is annotation_type:
                 setattr(self.input_class, variable_name, variable_input)
             else:
                 if self.class_attr.get("DISABLE_TYPE_EXCEPTIONS"):
                     setattr(self.input_class, variable_name, None)
                 else:
-                    type_exception(expected_type=self.class_annotations[variable_name], variable_name=variable_name,
+                    type_exception(expected_type=annotation_type, variable_name=variable_name,
                                    variable_value=variable_input)
 
     def _get_input_from_source(self, variable_name):
