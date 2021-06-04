@@ -40,9 +40,8 @@ class SpecialDictModel:
                 if self.class_attr.get("DISABLE_TYPE_EXCEPTIONS"):
                     setattr(self.input_class, variable_name, None)
                 else:
-                    raise TypeError(
-                        f"Input for variable '{variable_name}' is {variable_input} in type {type(variable_input)}, "
-                        f"expected type {self.class_annotations[variable_name]}")
+                    type_exception(expected_type=self.class_annotations[variable_name], variable_name=variable_name,
+                                   variable_value=variable_input)
 
     def _get_input_from_source(self, variable_name):
         source = self.class_attr.get(f"{variable_name.upper()}_SOURCE")
@@ -57,9 +56,23 @@ class SpecialDictModel:
 
     def _validate_usages_in_class(self):
         self._validate_source_existence()
+        self._validate_source_type_str()
 
     def _validate_source_existence(self):
         for name in self.class_annotations:
             if f"{name.upper()}_SOURCE" not in self.class_attr:
                 raise Exception(SOURCE_NAMING_EXCEPTION_MESSAGE)
         return True
+
+    def _validate_source_type_str(self):
+        for attr_key in self.class_attr:
+            if "_SOURCE" in attr_key:
+                attr_value = self.class_attr.get(attr_key)
+                if type(attr_value) is not str:
+                    type_exception(expected_type=str, variable_name=attr_key, variable_value=attr_value)
+
+
+def type_exception(expected_type: type, variable_name: str, variable_value, requirement_explanation=""):
+    raise TypeError(f"\n\nInput for variable '{variable_name}' is '{variable_value}' in type {type(variable_value)}, "
+                    f"expected type {expected_type}\n"
+                    f"{requirement_explanation}\n")
