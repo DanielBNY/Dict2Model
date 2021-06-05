@@ -1,13 +1,14 @@
-from DictionaryModel import DictionaryModelFactory
+from src.special_model.SpecialModelFactory import SpecialModelFactory
 
 
 class TestObj:
     number: int
     question: bool
 
-    NUMBER_SOURCE = "data-number"  # dict source
-    QUESTION_SOURCE = "data-question"  # dict source
+    NUMBER_SOURCE = "data-number"
+    QUESTION_SOURCE = "data-question"
     DISABLE_TYPE_EXCEPTIONS = True
+    DISABLE_PATH_EXCEPTIONS = True
 
 
 dict_input_test = {
@@ -17,8 +18,7 @@ dict_input_test = {
     }
 }
 
-
-def test():
-    test_obj: TestObj = DictionaryModelFactory(TestObj, dict_input_test).run()
-    print(test_obj.number, test_obj.question)
-test()
+factory = SpecialModelFactory(TestObj, dict_input_test)
+test_obj: TestObj = factory.run()
+print(test_obj.number, test_obj.question)
+print(type(test_obj.number), type(test_obj.question))
