@@ -65,9 +65,9 @@ class DictionaryModelFactory:
         source_dict_path_str: str = self._class_attr.get(f"{variable_name.upper()}{SOURCE_SUFFIX}")
         source_dict_path_list: list = source_dict_path_str.split(SOURCE_SEPARATION_CHAR)
         data = self._input_dict
-        for part in source_dict_path_list:
+        for key in source_dict_path_list:
             if data:
-                data = data.get(part)
+                data = data.get(key)
                 if data is None:
                     exception_message = f"\nThe path {str(source_dict_path_list)} in dict {self._input_dict} don't exist\n" \
                                         f"{SOURCE_FORMAT_EXPLANATION}"
