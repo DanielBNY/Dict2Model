@@ -111,6 +111,11 @@ class DictionaryModelFactory:
         self._validate_source_existence()
         self._validate_source_type_str()
 
+    def _validate_class_input_type(self):
+        if type(self._input_class) is not type:
+            raise Exception(type_exception_message(expected_type=type, variable_name="input_class",
+                                                   variable_value=self._input_class))
+
     def _validate_annotation_existence(self):
         if not self._class_annotations:
             raise Exception(f"\nNo annotation variables in {self._input_class}.\n"
