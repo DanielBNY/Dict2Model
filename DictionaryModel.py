@@ -54,8 +54,8 @@ class DictionaryModelFactory:
             if type(variable_input) is annotation_type:
                 setattr(self._input_class, variable_name, variable_input)
             else:
-                exception_message = type_exception_message(expected_type=annotation_type, variable_value=variable_input,
-                                                           variable_name=variable_name)
+                exception_message = get_type_exception_message(expected_type=annotation_type, variable_value=variable_input,
+                                                               variable_name=variable_name)
                 self.type_exception_or_log(disable_exception=self._disable_type_exception,
                                            exception_message=exception_message)
                 if self._disable_type_exception:
@@ -113,9 +113,9 @@ class DictionaryModelFactory:
 
     def _validate_class_input_type(self):
         if type(self._input_class) is not type:
-            raise Exception(type_exception_message(expected_type=type, variable_name="input_class",
-                                                   variable_value=self._input_class,
-                                                   requirement_explanation=CLASS_REQUIREMENT_EXPLANATION))
+            raise Exception(get_type_exception_message(expected_type=type, variable_name="input_class",
+                                                       variable_value=self._input_class,
+                                                       requirement_explanation=CLASS_REQUIREMENT_EXPLANATION))
 
     def _validate_annotation_existence(self):
         if not self._class_annotations:
@@ -124,8 +124,8 @@ class DictionaryModelFactory:
 
     def _validate_dict_input(self):
         if type(self._input_dict) is not dict:
-            exception_message = type_exception_message(expected_type=dict, variable_name='input_dict',
-                                                       variable_value=self._input_dict)
+            exception_message = get_type_exception_message(expected_type=dict, variable_name='input_dict',
+                                                           variable_value=self._input_dict)
             raise Exception(exception_message)
 
     def _validate_sources_for_annotations(self):
@@ -139,13 +139,13 @@ class DictionaryModelFactory:
             if SOURCE_SUFFIX in attr_key:
                 attr_value = self._class_attr.get(attr_key)
                 if type(attr_value) is not str:
-                    exception_message = type_exception_message(expected_type=str, variable_name=attr_key,
-                                                               variable_value=attr_value,
-                                                               requirement_explanation=SOURCE_FORMAT_EXPLANATION)
+                    exception_message = get_type_exception_message(expected_type=str, variable_name=attr_key,
+                                                                   variable_value=attr_value,
+                                                                   requirement_explanation=SOURCE_FORMAT_EXPLANATION)
                     raise TypeError(exception_message)
 
 
-def type_exception_message(expected_type: type, variable_name: str, variable_value, requirement_explanation=""):
+def get_type_exception_message(expected_type: type, variable_name: str, variable_value, requirement_explanation=""):
     return f"Input for variable '{variable_name}' is '{variable_value}' in type {type(variable_value)}, " \
            f"expected type {expected_type}\n" \
            f"{requirement_explanation}"
