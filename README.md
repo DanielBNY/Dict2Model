@@ -1,5 +1,5 @@
-# DictionaryModel
-Dictionary Model
+# SpecialModel
+Special Model
 
 ![alt_text](https://raw.githubusercontent.com/DanielBNY/DictionaryModel/dev/extra/Logo.png)
 
@@ -37,3 +37,8 @@ Full example:
         QUESTION_SOURCE = "data-question"
         DISABLE_TYPE_EXCEPTIONS = True
         DISABLE_PATH_EXCEPTIONS = True
+
+
+##Use
+
+    pip install SpecialModel
