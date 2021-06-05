@@ -108,7 +108,8 @@ class DictionaryModelFactory:
                 source_variable = attr_key
                 required_annotation = source_variable.replace(SOURCE_SUFFIX, '').lower()
                 if required_annotation not in self._class_annotations:
-                    raise Exception(f"No annotation: '{required_annotation}'")
+                    raise Exception(f"No annotation variable '{required_annotation}'\n"
+                                    f"{ANNOTATION_FOR_SOURCES}")
 
     def _validate_class_input_type(self):
         if type(self._input_class) is not type:

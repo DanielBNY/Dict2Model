@@ -58,3 +58,16 @@ class ExampleObj:    <-------- Class example
                                             |
 model_factory = DictionaryModelFactory(ExampleObj, input_dict)
 """
+
+ANNOTATION_FOR_SOURCES = f"""
+Each source require to have a type annotation variable.
+
+For example:
+
+class ExampleObj:  
+    number: int            <-------- annotation for the number input 
+    question: bool   
+
+    NUMBER{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}number"     <-------- The source path for the number input
+    QUESTION{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}question"
+"""
