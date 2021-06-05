@@ -52,6 +52,7 @@ class DictionaryModelFactory:
         self.input_dict = input_dict
         self.disable_type_exception = bool(self.class_attr.get(DISABLE_TYPE_EXCEPTIONS))
         self.disable_path_exception = bool(self.class_attr.get(DISABLE_PATH_EXCEPTIONS))
+        self.log = ""
 
     def run(self):
         self._validate_usages_in_class()
@@ -78,9 +79,15 @@ class DictionaryModelFactory:
         for part in split_source:
             if data:
                 data = data.get(part)
-                if (data is None) and (not self.disable_path_exception):
-                    raise Exception(f"\nThe path {str(split_source)} in dict {self.input_dict} don't exist\n"
-                                    f"{SOURCE_FORMAT_EXPLANATION}")
+                if data is None:
+                    exception_message = f"\nThe path {str(split_source)} in dict {self.input_dict} don't exist\n" \
+                                        f"{SOURCE_FORMAT_EXPLANATION}"
+                    try:
+                        raise Exception(exception_message)
+                    except Exception as ex:
+                        if not self.disable_path_exception:
+                            raise ex
+                        self.log += exception_message
         return data
 
     # Usages Validations
@@ -103,7 +110,7 @@ class DictionaryModelFactory:
     def _validate_source_existence(self):
         for name in self.class_annotations:
             if f"{name.upper()}{SOURCE_SUFFIX}" not in self.class_attr:
-                raise Exception(f"\nNo source variable {name.upper()+SOURCE_SUFFIX}\n"
+                raise Exception(f"\nNo source variable {name.upper() + SOURCE_SUFFIX}\n"
                                 f"{SOURCE_NAMING_EXCEPTION_MESSAGE}")
 
     def _validate_source_type_str(self):
