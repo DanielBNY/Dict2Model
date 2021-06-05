@@ -82,15 +82,18 @@ class DictionaryModelFactory:
                 if data is None:
                     exception_message = f"\nThe path {str(split_source)} in dict {self.input_dict} don't exist\n" \
                                         f"{SOURCE_FORMAT_EXPLANATION}"
-                    try:
-                        raise Exception(exception_message)
-                    except Exception as ex:
-                        if not self.disable_path_exception:
-                            raise ex
-                        self.log += exception_message
+                    self.exception_or_log(disable_exception=self.disable_path_exception,
+                                          exception_message=exception_message)
         return data
 
     # Usages Validations
+    def exception_or_log(self, disable_exception: bool, exception_message: str):
+        try:
+            raise Exception(exception_message)
+        except Exception as ex:
+            if not disable_exception:
+                raise ex
+            self.log += exception_message
 
     def _validate_usages_in_class(self):
         self._validate_annotation_existence()
