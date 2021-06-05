@@ -42,6 +42,23 @@ class ExampleObj:
     QUESTION{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}question"
 """
 
+CLASS_REQUIREMENT_EXPLANATION = f"""
+input_class is required.
+Class example:
+
+class ExampleObj:    <-------- Class example
+    number: int         
+    question: bool   
+
+    NUMBER{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}number"
+    QUESTION{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}question"
+
+                                        Class input                               
+                                            |
+                                            |
+model_factory = DictionaryModelFactory(ExampleObj, input_dict)
+"""
+
 
 class DictionaryModelFactory:
 
@@ -123,7 +140,8 @@ class DictionaryModelFactory:
     def _validate_class_input_type(self):
         if type(self._input_class) is not type:
             raise Exception(type_exception_message(expected_type=type, variable_name="input_class",
-                                                   variable_value=self._input_class))
+                                                   variable_value=self._input_class,
+                                                   requirement_explanation=CLASS_REQUIREMENT_EXPLANATION))
 
     def _validate_annotation_existence(self):
         if not self._class_annotations:
