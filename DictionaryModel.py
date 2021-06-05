@@ -66,8 +66,8 @@ class DictionaryModelFactory:
             if type(variable_input) is annotation_type:
                 setattr(self.input_class, variable_name, variable_input)
             else:
-                exception_message = f"Input for variable '{variable_name}' is '{variable_input}' in type {type(variable_input)}, " \
-                                    f"expected type {annotation_type}"
+                exception_message = type_exception_message(expected_type=annotation_type, variable_value=variable_input,
+                                                           variable_name=variable_name)
                 self.type_exception_or_log(disable_exception=self.disable_type_exception,
                                            exception_message=exception_message)
                 if self.disable_type_exception:
@@ -131,11 +131,13 @@ class DictionaryModelFactory:
             if SOURCE_SUFFIX in attr_key:
                 attr_value = self.class_attr.get(attr_key)
                 if type(attr_value) is not str:
-                    type_exception(expected_type=str, variable_name=attr_key, variable_value=attr_value,
-                                   requirement_explanation=SOURCE_FORMAT_EXPLANATION)
+                    exception_message = type_exception_message(expected_type=str, variable_name=attr_key,
+                                                               variable_value=attr_value,
+                                                               requirement_explanation=SOURCE_FORMAT_EXPLANATION)
+                    raise TypeError(exception_message)
 
 
-def type_exception(expected_type: type, variable_name: str, variable_value, requirement_explanation=""):
-    raise TypeError(f"\n\nInput for variable '{variable_name}' is '{variable_value}' in type {type(variable_value)}, "
-                    f"expected type {expected_type}\n"
-                    f"{requirement_explanation}\n")
+def type_exception_message(expected_type: type, variable_name: str, variable_value, requirement_explanation=""):
+    return f"\n\nInput for variable '{variable_name}' is '{variable_value}' in type {type(variable_value)}, " \
+           f"expected type {expected_type}\n" \
+           f"{requirement_explanation}\n"
