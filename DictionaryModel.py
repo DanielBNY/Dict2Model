@@ -54,7 +54,8 @@ class DictionaryModelFactory:
             if type(variable_input) is annotation_type:
                 setattr(self._input_class, variable_name, variable_input)
             else:
-                exception_message = get_type_exception_message(expected_type=annotation_type, variable_value=variable_input,
+                exception_message = get_type_exception_message(expected_type=annotation_type,
+                                                               variable_value=variable_input,
                                                                variable_name=variable_name)
                 self.type_exception_or_log(disable_exception=self._disable_type_exception,
                                            exception_message=exception_message)
@@ -113,9 +114,10 @@ class DictionaryModelFactory:
 
     def _validate_class_input_type(self):
         if type(self._input_class) is not type:
-            raise Exception(get_type_exception_message(expected_type=type, variable_name="input_class",
-                                                       variable_value=self._input_class,
-                                                       requirement_explanation=CLASS_REQUIREMENT_EXPLANATION))
+            type_exception_message = get_type_exception_message(expected_type=type, variable_name="input_class",
+                                                                variable_value=self._input_class,
+                                                                requirement_explanation=CLASS_REQUIREMENT_EXPLANATION)
+            raise TypeError(type_exception_message)
 
     def _validate_annotation_existence(self):
         if not self._class_annotations:
@@ -124,9 +126,9 @@ class DictionaryModelFactory:
 
     def _validate_dict_input(self):
         if type(self._input_dict) is not dict:
-            exception_message = get_type_exception_message(expected_type=dict, variable_name='input_dict',
-                                                           variable_value=self._input_dict)
-            raise Exception(exception_message)
+            type_exception_message = get_type_exception_message(expected_type=dict, variable_name='input_dict',
+                                                                variable_value=self._input_dict)
+            raise TypeError(type_exception_message)
 
     def _validate_sources_for_annotations(self):
         for name in self._class_annotations:
