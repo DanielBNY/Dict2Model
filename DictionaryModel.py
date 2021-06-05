@@ -46,44 +46,44 @@ class ExampleObj:
 class DictionaryModelFactory:
 
     def __init__(self, input_class: type, input_dict: dict):
-        self.input_class = input_class
-        self.class_attr = self.input_class.__dict__
-        self.class_annotations = self.class_attr.get('__annotations__')
-        self.input_dict = input_dict
-        self.disable_type_exception = bool(self.class_attr.get(DISABLE_TYPE_EXCEPTIONS))
-        self.disable_path_exception = bool(self.class_attr.get(DISABLE_PATH_EXCEPTIONS))
+        self._input_class = input_class
+        self._class_attr = self._input_class.__dict__
+        self._class_annotations = self._class_attr.get('__annotations__')
+        self._input_dict = input_dict
+        self._disable_type_exception = bool(self._class_attr.get(DISABLE_TYPE_EXCEPTIONS))
+        self._disable_path_exception = bool(self._class_attr.get(DISABLE_PATH_EXCEPTIONS))
         self.log = ""
 
     def run(self):
         self._validate_usages_in_class()
         self._insert_values_to_class()
-        return self.input_class
+        return self._input_class
 
     def _insert_values_to_class(self):
-        for variable_name in self.class_annotations:
-            annotation_type = self.class_annotations.get(variable_name)
+        for variable_name in self._class_annotations:
+            annotation_type = self._class_annotations.get(variable_name)
             variable_input = self._get_input_from_source(variable_name)
             if type(variable_input) is annotation_type:
-                setattr(self.input_class, variable_name, variable_input)
+                setattr(self._input_class, variable_name, variable_input)
             else:
                 exception_message = type_exception_message(expected_type=annotation_type, variable_value=variable_input,
                                                            variable_name=variable_name)
-                self.type_exception_or_log(disable_exception=self.disable_type_exception,
+                self.type_exception_or_log(disable_exception=self._disable_type_exception,
                                            exception_message=exception_message)
-                if self.disable_type_exception:
-                    setattr(self.input_class, variable_name, None)
+                if self._disable_type_exception:
+                    setattr(self._input_class, variable_name, None)
 
     def _get_input_from_source(self, variable_name):
-        source = self.class_attr.get(f"{variable_name.upper()}{SOURCE_SUFFIX}")
+        source = self._class_attr.get(f"{variable_name.upper()}{SOURCE_SUFFIX}")
         split_source = source.split(SOURCE_SEPARATION_CHAR)
-        data = self.input_dict
+        data = self._input_dict
         for part in split_source:
             if data:
                 data = data.get(part)
                 if data is None:
-                    exception_message = f"\nThe path {str(split_source)} in dict {self.input_dict} don't exist\n" \
+                    exception_message = f"\nThe path {str(split_source)} in dict {self._input_dict} don't exist\n" \
                                         f"{SOURCE_FORMAT_EXPLANATION}"
-                    self.normal_exception_or_log(disable_exception=self.disable_path_exception,
+                    self.normal_exception_or_log(disable_exception=self._disable_path_exception,
                                                  exception_message=exception_message)
         return data
 
@@ -112,24 +112,24 @@ class DictionaryModelFactory:
         self._validate_source_type_str()
 
     def _validate_annotation_existence(self):
-        if not self.class_annotations:
-            raise Exception(f"\nNo annotation variables in {self.input_class}.\n"
+        if not self._class_annotations:
+            raise Exception(f"\nNo annotation variables in {self._input_class}.\n"
                             f"{ANNOTATION_VARIABLE_EXPLANATION}")
 
     def _validate_dict_input(self):
-        if type(self.input_dict) is not dict:
-            raise Exception(f"\nThe given input is not in type <class 'dict'> but in type '{type(self.input_dict)}'")
+        if type(self._input_dict) is not dict:
+            raise Exception(f"\nThe given input is not in type <class 'dict'> but in type '{type(self._input_dict)}'")
 
     def _validate_source_existence(self):
-        for name in self.class_annotations:
-            if f"{name.upper()}{SOURCE_SUFFIX}" not in self.class_attr:
+        for name in self._class_annotations:
+            if f"{name.upper()}{SOURCE_SUFFIX}" not in self._class_attr:
                 raise Exception(f"\nNo source variable {name.upper() + SOURCE_SUFFIX}\n"
                                 f"{SOURCE_NAMING_EXCEPTION_MESSAGE}")
 
     def _validate_source_type_str(self):
-        for attr_key in self.class_attr:
+        for attr_key in self._class_attr:
             if SOURCE_SUFFIX in attr_key:
-                attr_value = self.class_attr.get(attr_key)
+                attr_value = self._class_attr.get(attr_key)
                 if type(attr_value) is not str:
                     exception_message = type_exception_message(expected_type=str, variable_name=attr_key,
                                                                variable_value=attr_value,
