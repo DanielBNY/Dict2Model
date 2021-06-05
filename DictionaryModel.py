@@ -47,15 +47,16 @@ class DictionaryModelFactory:
 
     def __init__(self, input_class: type, input_dict: dict):
         self._input_class = input_class
+        self._input_dict = input_dict
+        self._validates_input()
         self._class_attr = self._input_class.__dict__
         self._class_annotations = self._class_attr.get('__annotations__')
-        self._input_dict = input_dict
         self._disable_type_exception = bool(self._class_attr.get(DISABLE_TYPE_EXCEPTIONS))
         self._disable_path_exception = bool(self._class_attr.get(DISABLE_PATH_EXCEPTIONS))
         self.log = ""
+        self._validate_usages_in_class()
 
     def run(self):
-        self._validate_usages_in_class()
         self._insert_values_to_class()
         return self._input_class
 
@@ -104,10 +105,12 @@ class DictionaryModelFactory:
             self.log += exception_message
 
     # Usages Validations
+    def _validates_input(self):
+        self._validate_dict_input()
+        self._validate_class_input_type()
 
     def _validate_usages_in_class(self):
         self._validate_annotation_existence()
-        self._validate_dict_input()
         self._validate_source_existence()
         self._validate_source_type_str()
 
