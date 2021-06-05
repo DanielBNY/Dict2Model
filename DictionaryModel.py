@@ -152,6 +152,6 @@ class DictionaryModelFactory:
 
 
 def type_exception_message(expected_type: type, variable_name: str, variable_value, requirement_explanation=""):
-    return f"\n\nInput for variable '{variable_name}' is '{variable_value}' in type {type(variable_value)}, " \
+    return f"Input for variable '{variable_name}' is '{variable_value}' in type {type(variable_value)}, " \
            f"expected type {expected_type}\n" \
-           f"{requirement_explanation}\n"
+           f"{requirement_explanation}"
