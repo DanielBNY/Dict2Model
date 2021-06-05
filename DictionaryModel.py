@@ -124,7 +124,9 @@ class DictionaryModelFactory:
 
     def _validate_dict_input(self):
         if type(self._input_dict) is not dict:
-            raise Exception(f"\nThe given input is not in type <class 'dict'> but in type '{type(self._input_dict)}'")
+            exception_message = type_exception_message(expected_type=dict, variable_name='input_dict',
+                                                       variable_value=self._input_dict)
+            raise Exception(exception_message)
 
     def _validate_sources_for_annotations(self):
         for name in self._class_annotations:
