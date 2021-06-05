@@ -98,7 +98,7 @@ class DictionaryModelFactory:
 
     def _validate_usages_in_class(self):
         self._validate_annotation_existence()
-        self._validate_source_existence()
+        self._validate_sources_for_annotations()
         self._validate_source_type_str()
         self._validate_annotations_for_sources()
 
@@ -125,7 +125,7 @@ class DictionaryModelFactory:
         if type(self._input_dict) is not dict:
             raise Exception(f"\nThe given input is not in type <class 'dict'> but in type '{type(self._input_dict)}'")
 
-    def _validate_source_existence(self):
+    def _validate_sources_for_annotations(self):
         for name in self._class_annotations:
             if f"{name.upper()}{SOURCE_SUFFIX}" not in self._class_attr:
                 raise Exception(f"\nNo source variable {name.upper() + SOURCE_SUFFIX}\n"
