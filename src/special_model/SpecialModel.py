@@ -24,7 +24,7 @@
 from .DictionaryModelConsts import *
 
 
-class DictionaryModelFactory:
+class SpecialModelFactory:
 
     def __init__(self, input_class: type, input_dict: dict):
         self._init_input_params(input_class, input_dict)
