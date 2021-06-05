@@ -46,15 +46,21 @@ class ExampleObj:
 class DictionaryModelFactory:
 
     def __init__(self, input_class: type, input_dict: dict):
+        self._init_input_params(input_class, input_dict)
+        self._validates_input()
+        self._init_extra_attributes()
+        self._validate_usages_in_class()
+
+    def _init_input_params(self, input_class, input_dict):
         self._input_class = input_class
         self._input_dict = input_dict
-        self._validates_input()
+
+    def _init_extra_attributes(self):
         self._class_attr = self._input_class.__dict__
         self._class_annotations = self._class_attr.get('__annotations__')
         self._disable_type_exception = bool(self._class_attr.get(DISABLE_TYPE_EXCEPTIONS))
         self._disable_path_exception = bool(self._class_attr.get(DISABLE_PATH_EXCEPTIONS))
         self.log = ""
-        self._validate_usages_in_class()
 
     def run(self):
         self._insert_values_to_class()
