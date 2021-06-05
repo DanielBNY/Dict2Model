@@ -5,7 +5,7 @@ DISABLE_PATH_EXCEPTIONS = "DISABLE_PATH_EXCEPTIONS"
 
 SOURCE_NAMING_EXCEPTION_MESSAGE = f"""
 Each variable is required to have a source. 
-The source naming is the normal variable name in upper case plus {SOURCE_SUFFIX}
+The source naming is the normal annotation variable name in upper case plus {SOURCE_SUFFIX}.
 
 For example:
 
@@ -15,9 +15,6 @@ class ExampleObj:
 
     NUMBER{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}number"              <----------- Sources
     QUESTION{SOURCE_SUFFIX} = "data{SOURCE_SEPARATION_CHAR}question"       <-----------
-
-
-If the variable NUMBER{SOURCE_SUFFIX} would change to NUMBER_
 """
 
 SOURCE_FORMAT_EXPLANATION = f"""
@@ -106,7 +103,8 @@ class DictionaryModelFactory:
     def _validate_source_existence(self):
         for name in self.class_annotations:
             if f"{name.upper()}{SOURCE_SUFFIX}" not in self.class_attr:
-                raise Exception(SOURCE_NAMING_EXCEPTION_MESSAGE)
+                raise Exception(f"\nNo source variable {name.upper()+SOURCE_SUFFIX}\n"
+                                f"{SOURCE_NAMING_EXCEPTION_MESSAGE}")
 
     def _validate_source_type_str(self):
         for attr_key in self.class_attr:
