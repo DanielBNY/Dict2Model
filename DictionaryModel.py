@@ -100,6 +100,15 @@ class DictionaryModelFactory:
         self._validate_annotation_existence()
         self._validate_source_existence()
         self._validate_source_type_str()
+        self._validate_annotations_for_sources()
+
+    def _validate_annotations_for_sources(self):
+        for attr_key in self._class_attr:
+            if SOURCE_SUFFIX in attr_key:
+                source_variable = attr_key
+                required_annotation = source_variable.replace(SOURCE_SUFFIX, '').lower()
+                if required_annotation not in self._class_annotations:
+                    raise Exception(f"No annotation: '{required_annotation}'")
 
     def _validate_class_input_type(self):
         if type(self._input_class) is not type:
