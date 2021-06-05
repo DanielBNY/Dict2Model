@@ -28,7 +28,7 @@ class DictionaryModelFactory:
 
     def __init__(self, input_class: type, input_dict: dict):
         self._init_input_params(input_class, input_dict)
-        self._validates_input()
+        self._validate_input()
         self._init_extra_attributes()
         self._validate_usages_in_class()
 
@@ -92,7 +92,7 @@ class DictionaryModelFactory:
             self.log += exception_message
 
     # Usages Validations
-    def _validates_input(self):
+    def _validate_input(self):
         self._validate_dict_input()
         self._validate_class_input_type()
 
