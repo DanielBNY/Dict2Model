@@ -1,7 +1,7 @@
 # DictionaryModel
 Dictionary Model
 
-![alt_text](https://raw.githubusercontent.com/DanielBNY/DictionaryModel/dev/extra/Logo.jpg)
+![alt_text](https://raw.githubusercontent.com/DanielBNY/DictionaryModel/dev/extra/Logo.png)
 
 The library returns an object with defined attributes in types from an input dictionary, 
 with optional rules about types and more.
