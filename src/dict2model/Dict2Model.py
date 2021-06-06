@@ -21,10 +21,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from .DictionaryModelConsts import *
+from .Dict2ModelConsts import *
 
 
-class SpecialModelFactory:
+class Dict2Model:
 
     def __init__(self, input_class: type, input_dict: dict):
         self._init_input_params(input_class, input_dict)

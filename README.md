@@ -1,5 +1,5 @@
-# SpecialModel
-Special Model
+# Dict2Model
+
 
 ![alt_text](https://raw.githubusercontent.com/DanielBNY/DictionaryModel/dev/extra/Logo.png)
 
