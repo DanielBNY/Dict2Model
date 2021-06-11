@@ -57,7 +57,7 @@ class Factory:
         self.source_info_obj_dict = getattr(model, SOURCE_INFO_KEY)
         self.indexed_attributes = {}
         self.save_indexed_attributes(model.__dict__)
-        self.set_attributes()
+        self.set_attributes(model)
 
     def save_indexed_attributes(self, model_dict):
         for key in model_dict:
@@ -67,13 +67,17 @@ class Factory:
                     source_info_hash = model_dict[key]
                     self.indexed_attributes[source_info_hash] = variable_name
 
-    def set_attributes(self):
+    def set_attributes(self, model):
         keys = self.source_info_obj_dict.keys()
         print(self.indexed_attributes)
         for key in keys:
             source_onj = self.source_info_obj_dict[key]
             variable_input = self._get_input_from_source(source_onj.path, source_onj.disable_path_exception)
-            print(variable_input)
+            if isinstance(variable_input, source_onj.type):
+                setattr(model, self.indexed_attributes[key], variable_input)
+            else:
+                if not source_onj.disable_type_exception:
+                    raise Exception
 
     def _get_input_from_source(self, dictionary_path, disable_path_exception):
         data = self.dictionary_input
@@ -86,9 +90,10 @@ class Factory:
 
 
 class Example(Dict2Model):
-    a: int = Dict2Model.source(path=['a'], required_type=int)
-    b: str = Dict2Model.source(path=['j'], required_type=str)
+    a = Dict2Model.source(path=['a'], required_type=int)
+    b = Dict2Model.source(path=['j'], required_type=str)
 
 
-f = Factory(Example, {'a': 3, 'j': 7})
-print(f.__dict__)
+example1 = Example
+Factory(example1, {'a': 3, 'j': '7'})
+print(example1.a, example1.b)
