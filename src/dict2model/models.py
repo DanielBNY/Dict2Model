@@ -10,10 +10,6 @@ class SourceInfo:
 
 
 class MetaModel(type):
-    def __new__(cls, name, bases, dct):
-        x = super().__new__(cls, name, bases, dct)
-        return x
-
     def __get__(cls, attribute):
         try:
             value = getattr(cls, attribute)
