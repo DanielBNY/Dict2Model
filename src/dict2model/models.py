@@ -52,16 +52,17 @@ class Dict2Model(metaclass=MetaModel):
 
 
 class Factory:
-    def __init__(self, model: object, dictionary: dict):
-        self.dict2model = model
-        self.dictionary_input = dictionary
-        self.source_info_obj_dict = getattr(model, SOURCE_INFO_KEY)
+    def __init__(self, model):
+        self.dictionary_input = {}
         self.indexed_attributes = {}
-        self.save_indexed_attributes(model.__dict__)
-        self.set_attributes()
+        self.model = model
+        self.source_info_obj_dict = getattr(model, SOURCE_INFO_KEY)
 
-    def run(self):
-        return self.dict2model
+    def run(self, dictionary):
+        self.dictionary_input = dictionary
+        self.save_indexed_attributes(self.model.__dict__)
+        self.set_attributes()
+        return self.model
 
     def save_indexed_attributes(self, model_dict):
         for key in model_dict:
@@ -78,12 +79,12 @@ class Factory:
             source_onj = self.source_info_obj_dict[key]
             variable_input = self._get_input_from_source(source_onj.path, source_onj.path_exception)
             if isinstance(variable_input, source_onj.type):
-                setattr(self.dict2model, self.indexed_attributes[key], variable_input)
+                setattr(self.model, self.indexed_attributes[key], variable_input)
             else:
                 if source_onj.type_exception:
                     raise Exception
                 else:
-                    setattr(self.dict2model, self.indexed_attributes[key], None)
+                    setattr(self.model, self.indexed_attributes[key], None)
 
     def _get_input_from_source(self, dictionary_path, path_exception):
         data = self.dictionary_input
@@ -103,6 +104,6 @@ class Example(Dict2Model):
     b = Dict2Model.source(path=['j'], required_type=int, type_exception=False, path_exception=False)
 
 
-factory = Factory(Example, {'a': 3, 'j': 3})
-example2 = factory.run()
+factory = Factory(Example)
+example2: Example = factory.run({'a': 3, 'j': 3})
 print(example2.a, example2.b)
