@@ -60,16 +60,16 @@ class Factory:
 
     def run(self, dictionary):
         self.dictionary_input = dictionary
-        self.save_indexed_attributes(self.model.__dict__)
+        self.save_indexed_attributes()
         self.set_attributes()
         return self.model
 
-    def save_indexed_attributes(self, model_dict):
-        for key in model_dict:
-            if isinstance(model_dict.get(key), int):
-                if model_dict.get(key) in self.source_info_obj_dict:
+    def save_indexed_attributes(self):
+        for key in self.model.__dict__:
+            if isinstance(self.model.__dict__.get(key), int):
+                if self.model.__dict__.get(key) in self.source_info_obj_dict:
                     variable_name = key
-                    source_info_hash = model_dict[key]
+                    source_info_hash = self.model.__dict__[key]
                     self.indexed_attributes[source_info_hash] = variable_name
 
     def set_attributes(self):
