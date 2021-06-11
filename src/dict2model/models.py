@@ -60,7 +60,7 @@ class Factory:
         self.save_indexed_attributes(model.__dict__)
         self.set_attributes()
 
-    def get(self):
+    def run(self):
         return self.dict2model
 
     def save_indexed_attributes(self, model_dict):
@@ -103,5 +103,6 @@ class Example(Dict2Model):
     b = Dict2Model.source(path=['j'], required_type=int, type_exception=False, path_exception=False)
 
 
-example1 = Factory(Example, {'a': 3, 'j': 3}).get()
-print(example1.a, example1.b)
+factory = Factory(Example, {'a': 3, 'j': 3})
+example2 = factory.run()
+print(example2.a, example2.b)
