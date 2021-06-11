@@ -2,10 +2,10 @@ SOURCE_INFO_KEY = 'source_info_obj_dict'
 
 
 class SourceInfo:
-    def __init__(self, path: list, disable_type_exception: bool, disable_path_exception: bool, required_type: type):
+    def __init__(self, path: list, type_exception: bool, path_exception: bool, required_type: type):
         self.path = path
-        self.disable_type_exception = disable_type_exception
-        self.disable_path_exception = disable_path_exception
+        self.type_exception = type_exception
+        self.path_exception = path_exception
         self.type = required_type
 
 
@@ -27,17 +27,17 @@ class MetaModel(type):
             return {}
         return source_info_obj_dict
 
-    def source(cls, path: list, required_type: type, disable_type_exception=False,
-               disable_path_exception=False) -> object:
-        cls.validate_source_input(path, required_type, disable_type_exception, disable_path_exception)
-        new_source_info = SourceInfo(path=path, disable_path_exception=disable_path_exception,
-                                     disable_type_exception=disable_type_exception, required_type=required_type)
+    def source(cls, path: list, required_type: type, type_exception=True,
+               path_exception=True) -> object:
+        cls.validate_source_input(path, required_type, type_exception, path_exception)
+        new_source_info = SourceInfo(path=path, path_exception=path_exception,
+                                     type_exception=type_exception, required_type=required_type)
         source_info_obj_dict = cls.get_source_info_obj_dict()
         source_info_obj_dict.__setitem__(hash(new_source_info), new_source_info)
         setattr(cls, SOURCE_INFO_KEY, source_info_obj_dict)
         return hash(new_source_info)
 
-    def validate_source_input(cls, path, required_type, disable_type_exception, disable_path_exception):
+    def validate_source_input(cls, path, required_type, type_exception, path_exception):
         cls.validate_list_type(path, str)
 
     @staticmethod
@@ -72,28 +72,28 @@ class Factory:
         print(self.indexed_attributes)
         for key in keys:
             source_onj = self.source_info_obj_dict[key]
-            variable_input = self._get_input_from_source(source_onj.path, source_onj.disable_path_exception)
+            variable_input = self._get_input_from_source(source_onj.path, source_onj.path_exception)
             if isinstance(variable_input, source_onj.type):
                 setattr(model, self.indexed_attributes[key], variable_input)
             else:
-                if not source_onj.disable_type_exception:
+                if source_onj.type_exception:
                     raise Exception
                 else:
                     setattr(model, self.indexed_attributes[key], None)
 
-    def _get_input_from_source(self, dictionary_path, disable_path_exception):
+    def _get_input_from_source(self, dictionary_path, path_exception):
         data = self.dictionary_input
         for key in dictionary_path:
             if data:
                 data = data.get(key)
-                if data is None and not disable_path_exception:
+                if data is None and not path_exception:
                     raise Exception
         return data
 
 
 class Example(Dict2Model):
-    a = Dict2Model.source(path=['a'], required_type=int, disable_type_exception=True, disable_path_exception=True)
-    b = Dict2Model.source(path=['j'], required_type=str, disable_type_exception=True, disable_path_exception=True)
+    a = Dict2Model.source(path=['a'], required_type=int, type_exception=False, path_exception=False)
+    b = Dict2Model.source(path=['j'], required_type=str, type_exception=False, path_exception=False)
 
 
 example1 = Example
