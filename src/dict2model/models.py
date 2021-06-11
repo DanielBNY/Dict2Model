@@ -84,16 +84,19 @@ class Factory:
     def _get_input_from_source(self, dictionary_path, path_exception):
         data = self.dictionary_input
         for key in dictionary_path:
-            if data:
+            if data and isinstance(data, dict):
                 data = data.get(key)
-                if data is None and not path_exception:
+            else:
+                if path_exception:
                     raise Exception
+                else:
+                    return None
         return data
 
 
 class Example(Dict2Model):
-    a = Dict2Model.source(path=['a'], required_type=int, type_exception=False, path_exception=False)
-    b = Dict2Model.source(path=['j'], required_type=str, type_exception=False, path_exception=False)
+    a = Dict2Model.source(path=['random'], required_type=int, type_exception=False, path_exception=False)
+    b = Dict2Model.source(path=['j'], required_type=int, type_exception=False, path_exception=False)
 
 
 example1 = Example
