@@ -78,6 +78,8 @@ class Factory:
             else:
                 if not source_onj.disable_type_exception:
                     raise Exception
+                else:
+                    setattr(model, self.indexed_attributes[key], None)
 
     def _get_input_from_source(self, dictionary_path, disable_path_exception):
         data = self.dictionary_input
@@ -90,10 +92,10 @@ class Factory:
 
 
 class Example(Dict2Model):
-    a = Dict2Model.source(path=['a'], required_type=int)
-    b = Dict2Model.source(path=['j'], required_type=str)
+    a = Dict2Model.source(path=['a'], required_type=int, disable_type_exception=True, disable_path_exception=True)
+    b = Dict2Model.source(path=['j'], required_type=str, disable_type_exception=True, disable_path_exception=True)
 
 
 example1 = Example
-Factory(example1, {'a': 3, 'j': '7'})
+Factory(example1, {'a': 3, 'j': 3})
 print(example1.a, example1.b)
