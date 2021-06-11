@@ -27,7 +27,7 @@ class MetaModel(type):
             return {}
         return source_info_obj_dict
 
-    def source(cls, path: list, type: type,disable_type_exception=False,
+    def source(cls, path: list, type: type, disable_type_exception=False,
                disable_path_exception=False) -> object:
         new_source_info = SourceInfo(path=path, disable_path_exception=disable_path_exception,
                                      disable_type_exception=disable_type_exception, required_type=type)
@@ -37,9 +37,8 @@ class MetaModel(type):
         return hash(new_source_info)
 
 
-class Model(metaclass=MetaModel):
-    def get_path(self):
-        return getattr(self, SOURCE_INFO_KEY)
+class Dict2Model(metaclass=MetaModel):
+    pass
 
 
 class Factory:
@@ -57,9 +56,9 @@ class Factory:
                     self.indexed_attributes[source_info_hash] = variable_name
 
 
-class Example(Model):
-    a: int = Model.source(path=['g', 'a'], type=int)
-    b: str = Model.source(path=['j', 'a'], type=str)
+class Example(Dict2Model):
+    a: int = Dict2Model.source(path=['g', 'a'], type=int)
+    b: str = Dict2Model.source(path=['j', 'a'], type=str)
 
 
 f = Factory(Example, {'a': 3})
