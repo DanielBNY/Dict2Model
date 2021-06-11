@@ -2,10 +2,11 @@ SOURCE_INFO_KEY = 'source_info_obj_dict'
 
 
 class SourceInfo:
-    def __init__(self, path: list, disable_type_exception: bool, disable_path_exception: bool):
+    def __init__(self, path: list, disable_type_exception: bool, disable_path_exception: bool, required_type: type):
         self.path = path
         self.disable_type_exception = disable_type_exception
         self.disable_path_exception = disable_path_exception
+        self.type = required_type
 
 
 class MetaModel(type):
@@ -26,10 +27,10 @@ class MetaModel(type):
             return {}
         return source_info_obj_dict
 
-    def source(cls, path: list, disable_type_exception=False,
+    def source(cls, path: list, type: type,disable_type_exception=False,
                disable_path_exception=False) -> object:
         new_source_info = SourceInfo(path=path, disable_path_exception=disable_path_exception,
-                                     disable_type_exception=disable_type_exception)
+                                     disable_type_exception=disable_type_exception, required_type=type)
         source_info_obj_dict = cls.get_source_info_obj_dict()
         source_info_obj_dict.__setitem__(hash(new_source_info), new_source_info)
         setattr(cls, SOURCE_INFO_KEY, source_info_obj_dict)
@@ -57,8 +58,8 @@ class Factory:
 
 
 class Example(Model):
-    a: int = Model.source(path=['g', 'a'])
-    b: str = Model.source(path=['j', 'a'])
+    a: int = Model.source(path=['g', 'a'], type=int)
+    b: str = Model.source(path=['j', 'a'], type=str)
 
 
 f = Factory(Example, {'a': 3})
