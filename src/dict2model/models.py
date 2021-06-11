@@ -41,10 +41,25 @@ class Model(metaclass=MetaModel):
         return getattr(self, SOURCE_INFO_KEY)
 
 
+class Factory:
+    def __init__(self, model: object, dictionary: dict):
+        self.source_info_obj_dict = getattr(model, SOURCE_INFO_KEY)
+        self.indexed_attributes = {}
+        self.save_indexed_attributes(model.__dict__)
+
+    def save_indexed_attributes(self, model_dict):
+        for key in model_dict:
+            if isinstance(model_dict.get(key), int):
+                if model_dict.get(key) in self.source_info_obj_dict:
+                    variable_name = key
+                    source_info_hash = model_dict[key]
+                    self.indexed_attributes[source_info_hash] = variable_name
+
+
 class Example(Model):
     a: int = Model.source(path=['g', 'a'])
     b: str = Model.source(path=['j', 'a'])
 
 
-b = Example()
-print(b.a, b.b, b.get_path())
+f = Factory(Example, {'a': 3})
+print(f.__dict__)
