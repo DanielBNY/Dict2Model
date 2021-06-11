@@ -57,7 +57,7 @@ class Dict2Model(metaclass=MetaModel):
     pass
 
 
-class Factory:
+class ModelFactory:
     def __init__(self, model):
         self.validate_model(model)
         self.dictionary_input = {}
@@ -70,7 +70,7 @@ class Factory:
         if not isinstance(model, MetaModel):
             raise TypeError
 
-    def run(self, dictionary):
+    def use(self, dictionary):
         self.dictionary_input = dictionary
         self.save_indexed_attributes()
         self.set_attributes()
@@ -117,7 +117,6 @@ class Example(Dict2Model):
     b = Dict2Model.source(path=['j'], required_type=int, type_exception=False, path_exception=False)
 
 
-factory = Factory(Example)
-example2: Example = factory.run({'a': 3, 'j': 3})
+example2: Example = ModelFactory(Example).use({'a': 3, 'j': 3})
 print(example2.a, example2.b)
 print(Example.__dict__)
