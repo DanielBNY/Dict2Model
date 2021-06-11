@@ -59,10 +59,16 @@ class Dict2Model(metaclass=MetaModel):
 
 class Factory:
     def __init__(self, model):
+        self.validate_model(model)
         self.dictionary_input = {}
         self.indexed_attributes = {}
         self.model = model()
         self.source_info_obj_dict = getattr(self.model, SOURCE_INFO_KEY)
+
+    @staticmethod
+    def validate_model(model):
+        if not isinstance(model, MetaModel):
+            raise TypeError
 
     def run(self, dictionary):
         self.dictionary_input = dictionary
@@ -107,7 +113,7 @@ class Factory:
 
 
 class Example(Dict2Model):
-    a = Dict2Model.source(path=['random'], required_type='int', type_exception=False, path_exception=False)
+    a = Dict2Model.source(path=['random'], required_type=int, type_exception=False, path_exception=False)
     b = Dict2Model.source(path=['j'], required_type=int, type_exception=False, path_exception=False)
 
 
