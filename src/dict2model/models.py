@@ -1,3 +1,6 @@
+SOURCE_INFO_KEY = 'source_info_obj_dict'
+
+
 class SourceInfo:
     def __init__(self, path: list, disable_type_exception: bool, disable_path_exception: bool):
         self.path = path
@@ -17,25 +20,25 @@ class MetaModel(type):
         except AttributeError:
             return None
 
-    def get_source_info_obj_list(cls) -> list:
-        source_info_obj_list = cls.__get__('source_info_obj_list')
-        if not source_info_obj_list:
-            return []
-        return source_info_obj_list
+    def get_source_info_obj_dict(cls) -> dict:
+        source_info_obj_dict = cls.__get__(SOURCE_INFO_KEY)
+        if source_info_obj_dict is None:
+            return {}
+        return source_info_obj_dict
 
     def source(cls, path: list, disable_type_exception=False,
                disable_path_exception=False) -> object:
         new_source_info = SourceInfo(path=path, disable_path_exception=disable_path_exception,
                                      disable_type_exception=disable_type_exception)
-        source_info_obj_list = cls.get_source_info_obj_list()
-        source_info_obj_list.append(new_source_info)
-        setattr(cls, 'source_info_obj_list', source_info_obj_list)
-        return
+        source_info_obj_dict = cls.get_source_info_obj_dict()
+        source_info_obj_dict.__setitem__(hash(new_source_info), new_source_info)
+        setattr(cls, SOURCE_INFO_KEY, source_info_obj_dict)
+        return hash(new_source_info)
 
 
 class Model(metaclass=MetaModel):
     def get_path(self):
-        return getattr(self, 'source_info_obj_list')
+        return getattr(self, SOURCE_INFO_KEY)
 
 
 class Example(Model):
@@ -44,4 +47,4 @@ class Example(Model):
 
 
 b = Example()
-print(b.get_path())
+print(b.a, b.b, b.get_path())
