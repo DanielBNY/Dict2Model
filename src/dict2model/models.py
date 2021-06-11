@@ -29,13 +29,16 @@ class MetaModel(type):
 
     def source(cls, path: list, required_type: type, disable_type_exception=False,
                disable_path_exception=False) -> object:
-        cls.validate_list_type(path, str)
+        cls.validate_source_input(path, required_type, disable_type_exception, disable_path_exception)
         new_source_info = SourceInfo(path=path, disable_path_exception=disable_path_exception,
                                      disable_type_exception=disable_type_exception, required_type=required_type)
         source_info_obj_dict = cls.get_source_info_obj_dict()
         source_info_obj_dict.__setitem__(hash(new_source_info), new_source_info)
         setattr(cls, SOURCE_INFO_KEY, source_info_obj_dict)
         return hash(new_source_info)
+
+    def validate_source_input(cls, path, required_type, disable_type_exception, disable_path_exception):
+        cls.validate_list_type(path, str)
 
     @staticmethod
     def validate_list_type(list_to_validate, type_to_validate):
@@ -64,8 +67,8 @@ class Factory:
 
 
 class Example(Dict2Model):
-    a: int = Dict2Model.source(path=['g', 'a'], type=int)
-    b: str = Dict2Model.source(path=['j', 'a'], type=str)
+    a: int = Dict2Model.source(path=['g', 'a'], required_type=int)
+    b: str = Dict2Model.source(path=['j', 'a'], required_type=str)
 
 
 f = Factory(Example, {'a': 3})
