@@ -54,7 +54,7 @@ class MetaModel(type):
 
 
 class Dict2Model(metaclass=MetaModel):
-    pass
+    log = ''
 
 
 class ModelFactory:
