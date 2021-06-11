@@ -53,9 +53,11 @@ class Dict2Model(metaclass=MetaModel):
 
 class Factory:
     def __init__(self, model: object, dictionary: dict):
+        self.dictionary_input = dictionary
         self.source_info_obj_dict = getattr(model, SOURCE_INFO_KEY)
         self.indexed_attributes = {}
         self.save_indexed_attributes(model.__dict__)
+        self.set_attributes()
 
     def save_indexed_attributes(self, model_dict):
         for key in model_dict:
@@ -65,11 +67,28 @@ class Factory:
                     source_info_hash = model_dict[key]
                     self.indexed_attributes[source_info_hash] = variable_name
 
+    def set_attributes(self):
+        keys = self.source_info_obj_dict.keys()
+        print(self.indexed_attributes)
+        for key in keys:
+            source_onj = self.source_info_obj_dict[key]
+            variable_input = self._get_input_from_source(source_onj.path, source_onj.disable_path_exception)
+            print(variable_input)
+
+    def _get_input_from_source(self, dictionary_path, disable_path_exception):
+        data = self.dictionary_input
+        for key in dictionary_path:
+            if data:
+                data = data.get(key)
+                if data is None and not disable_path_exception:
+                    raise Exception
+        return data
+
 
 class Example(Dict2Model):
-    a: int = Dict2Model.source(path=['g', 'a'], required_type=int)
-    b: str = Dict2Model.source(path=['j', 'a'], required_type=str)
+    a: int = Dict2Model.source(path=['a'], required_type=int)
+    b: str = Dict2Model.source(path=['j'], required_type=str)
 
 
-f = Factory(Example, {'a': 3})
+f = Factory(Example, {'a': 3, 'j': 7})
 print(f.__dict__)
