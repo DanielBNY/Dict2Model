@@ -27,11 +27,11 @@ class MetaModel(type):
             return {}
         return source_info_obj_dict
 
-    def source(cls, path: list, type: type, disable_type_exception=False,
+    def source(cls, path: list, required_type: type, disable_type_exception=False,
                disable_path_exception=False) -> object:
         cls.validate_list_type(path, str)
         new_source_info = SourceInfo(path=path, disable_path_exception=disable_path_exception,
-                                     disable_type_exception=disable_type_exception, required_type=type)
+                                     disable_type_exception=disable_type_exception, required_type=required_type)
         source_info_obj_dict = cls.get_source_info_obj_dict()
         source_info_obj_dict.__setitem__(hash(new_source_info), new_source_info)
         setattr(cls, SOURCE_INFO_KEY, source_info_obj_dict)
