@@ -55,8 +55,8 @@ class Factory:
     def __init__(self, model):
         self.dictionary_input = {}
         self.indexed_attributes = {}
-        self.model = model
-        self.source_info_obj_dict = getattr(model, SOURCE_INFO_KEY)
+        self.model = model()
+        self.source_info_obj_dict = getattr(self.model, SOURCE_INFO_KEY)
 
     def run(self, dictionary):
         self.dictionary_input = dictionary
@@ -65,11 +65,12 @@ class Factory:
         return self.model
 
     def save_indexed_attributes(self):
-        for key in self.model.__dict__:
-            if isinstance(self.model.__dict__.get(key), int):
-                if self.model.__dict__.get(key) in self.source_info_obj_dict:
+        for key in dir(self.model):
+            value = getattr(self.model, key)
+            if isinstance(value, int):
+                if value in self.source_info_obj_dict:
                     variable_name = key
-                    source_info_hash = self.model.__dict__[key]
+                    source_info_hash = value
                     self.indexed_attributes[source_info_hash] = variable_name
 
     def set_attributes(self):
@@ -107,3 +108,4 @@ class Example(Dict2Model):
 factory = Factory(Example)
 example2: Example = factory.run({'a': 3, 'j': 3})
 print(example2.a, example2.b)
+print(Example.__dict__)
