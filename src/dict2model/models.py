@@ -61,12 +61,12 @@ class Dict2Model(metaclass=MetaModel):
 
 
 class ModelFactory:
-    def __init__(self, model):
-        self.validate_model(model)
+    def __init__(self, model_class):
+        self.validate_model(model_class)
         self.dictionary_input = {}
         self.indexed_attributes = {}
-        self.model = model()
-        self.source_info_obj_dict = getattr(self.model, SOURCE_INFO_KEY)
+        self.model_instance = model_class()
+        self.source_info_obj_dict = getattr(self.model_instance, SOURCE_INFO_KEY)
 
     @staticmethod
     def validate_model(model):
@@ -77,11 +77,11 @@ class ModelFactory:
         self.dictionary_input = dictionary
         self.save_indexed_attributes()
         self.set_attributes()
-        return self.model
+        return self.model_instance
 
     def save_indexed_attributes(self):
-        for key in dir(self.model):
-            value = getattr(self.model, key)
+        for key in dir(self.model_instance):
+            value = getattr(self.model_instance, key)
             if isinstance(value, int):
                 if value in self.source_info_obj_dict:
                     variable_name = key
@@ -95,12 +95,12 @@ class ModelFactory:
             source_onj = self.source_info_obj_dict[key]
             variable_input = self._get_input_from_source(source_onj.path, source_onj.path_exception)
             if isinstance(variable_input, source_onj.type):
-                setattr(self.model, self.indexed_attributes[key], variable_input)
+                setattr(self.model_instance, self.indexed_attributes[key], variable_input)
             else:
                 if source_onj.type_exception:
                     raise Exception
                 else:
-                    setattr(self.model, self.indexed_attributes[key], None)
+                    setattr(self.model_instance, self.indexed_attributes[key], None)
 
     def _get_input_from_source(self, dictionary_path, path_exception):
         data = self.dictionary_input
@@ -116,7 +116,7 @@ class ModelFactory:
 
 
 class Example(Dict2Model):
-    a = Dict2Model.source(path=['random'], required_type=int, type_exception='False', path_exception=False)
+    a = Dict2Model.source(path=['random'], required_type=int, type_exception=False, path_exception=False)
     b = Dict2Model.source(path=['j'], required_type=int, type_exception=False, path_exception=False)
 
 
