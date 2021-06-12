@@ -1,4 +1,4 @@
-SOURCE_INFO_KEY = 'source_info_obj_dict'
+SOURCE_INFO_KEY = '__source_info_obj_dict__'
 
 
 class SourceInfo:
