@@ -3,10 +3,22 @@ SOURCE_INFO_KEY = '__source_info_obj_dict__'
 
 class SourceInfo:
     def __init__(self, path, type_exception, path_exception, required_type):
-        self.path = path
-        self.type_exception = type_exception
-        self.path_exception = path_exception
-        self.type = required_type
+        self._path = path
+        self._type_exception = type_exception
+        self._path_exception = path_exception
+        self._required_type = required_type
+
+    def get_path(self):
+        return self._path
+
+    def get_type_exception(self):
+        return self._type_exception
+
+    def get_path_exception(self):
+        return self._path_exception
+
+    def get_required_type(self):
+        return self._required_type
 
 
 class MetaModel(type):
@@ -93,11 +105,11 @@ class ModelFactory:
         print(self.indexed_attributes)
         for key in keys:
             source_onj = self.source_info_obj_dict[key]
-            variable_input = self._get_input_from_source(source_onj.path, source_onj.path_exception)
-            if isinstance(variable_input, source_onj.type):
+            variable_input = self._get_input_from_source(source_onj.get_path(), source_onj.get_path_exception())
+            if isinstance(variable_input, source_onj.get_required_type()):
                 setattr(self.model_instance, self.indexed_attributes[key], variable_input)
             else:
-                if source_onj.type_exception:
+                if source_onj.get_type_exception():
                     raise Exception
                 else:
                     setattr(self.model_instance, self.indexed_attributes[key], None)
