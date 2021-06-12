@@ -17,7 +17,7 @@ class MetaModel(type):
         except AttributeError:
             return None
 
-    def get_source_info_obj_dict(cls):
+    def _get_source_info_obj_dict(cls):
         source_info_obj_dict = cls.__get__(SOURCE_INFO_KEY)
         if source_info_obj_dict is None:
             return {}
@@ -25,32 +25,32 @@ class MetaModel(type):
 
     def source(cls, path, required_type, type_exception=True,
                path_exception=True):
-        cls.validate_source_input(path, required_type, type_exception, path_exception)
+        cls._validate_source_input(path, required_type, type_exception, path_exception)
         new_source_info = SourceInfo(path=path, path_exception=path_exception,
                                      type_exception=type_exception, required_type=required_type)
-        source_info_obj_dict = cls.get_source_info_obj_dict()
+        source_info_obj_dict = cls._get_source_info_obj_dict()
         source_info_obj_dict.__setitem__(hash(new_source_info), new_source_info)
         setattr(cls, SOURCE_INFO_KEY, source_info_obj_dict)
         return hash(new_source_info)
 
-    def validate_source_input(cls, path, required_type, type_exception, path_exception):
-        cls.validate_list_type(path, str)
-        cls.validate_required_type(required_type)
-        cls.validate_exception_condition(type_exception, path_exception)
+    def _validate_source_input(cls, path, required_type, type_exception, path_exception):
+        cls._validate_list_type(path, str)
+        cls._validate_required_type(required_type)
+        cls._validate_exception_condition(type_exception, path_exception)
 
     @staticmethod
-    def validate_exception_condition(type_exception, path_exception):
+    def _validate_exception_condition(type_exception, path_exception):
         if not isinstance(type_exception, bool) or \
                 not isinstance(path_exception, bool):
             raise TypeError
 
     @staticmethod
-    def validate_required_type(required_type):
+    def _validate_required_type(required_type):
         if not isinstance(required_type, type):
             raise TypeError
 
     @staticmethod
-    def validate_list_type(list_to_validate, type_to_validate):
+    def _validate_list_type(list_to_validate, type_to_validate):
         for item in list_to_validate:
             if not isinstance(item, type_to_validate):
                 raise TypeError
@@ -62,24 +62,24 @@ class Dict2Model(metaclass=MetaModel):
 
 class ModelFactory:
     def __init__(self, model_class):
-        self.validate_model(model_class)
+        self._validate_model(model_class)
         self.dictionary_input = {}
         self.indexed_attributes = {}
         self.model_instance = model_class()
         self.source_info_obj_dict = getattr(self.model_instance, SOURCE_INFO_KEY)
 
     @staticmethod
-    def validate_model(model):
+    def _validate_model(model):
         if not isinstance(model, MetaModel):
             raise TypeError
 
     def use(self, dictionary):
         self.dictionary_input = dictionary
-        self.save_indexed_attributes()
-        self.set_attributes()
+        self._save_indexed_attributes()
+        self._set_attributes()
         return self.model_instance
 
-    def save_indexed_attributes(self):
+    def _save_indexed_attributes(self):
         for key in dir(self.model_instance):
             value = getattr(self.model_instance, key)
             if isinstance(value, int):
@@ -88,7 +88,7 @@ class ModelFactory:
                     source_info_hash = value
                     self.indexed_attributes[source_info_hash] = variable_name
 
-    def set_attributes(self):
+    def _set_attributes(self):
         keys = self.source_info_obj_dict.keys()
         print(self.indexed_attributes)
         for key in keys:
