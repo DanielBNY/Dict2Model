@@ -21,16 +21,18 @@ class SourceInfo:
         return self._required_type
 
 
+def get_attr(cls, attribute):
+    try:
+        value = getattr(cls, attribute)
+        return value
+    except AttributeError:
+        return None
+
+
 class MetaModel(type):
-    def __get__(cls, attribute):
-        try:
-            value = getattr(cls, attribute)
-            return value
-        except AttributeError:
-            return None
 
     def _get_source_info_obj_dict(cls):
-        source_info_obj_dict = cls.__get__(SOURCE_INFO_KEY)
+        source_info_obj_dict = get_attr(cls, SOURCE_INFO_KEY)
         if source_info_obj_dict is None:
             return {}
         return source_info_obj_dict
@@ -75,10 +77,16 @@ class Dict2Model(metaclass=MetaModel):
 class ModelFactory:
     def __init__(self, model_class):
         self._validate_model(model_class)
+        self._validate_inner_class(model_class)
         self.dictionary_input = {}
         self.indexed_attributes = {}
         self.model_instance = model_class()
         self.source_info_obj_dict = getattr(self.model_instance, SOURCE_INFO_KEY)
+
+    @staticmethod
+    def _validate_inner_class(model_class):
+        if not get_attr(model_class, SOURCE_INFO_KEY):
+            raise Exception
 
     @staticmethod
     def _validate_model(model):
