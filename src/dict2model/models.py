@@ -36,6 +36,13 @@ class MetaModel(type):
     def validate_source_input(cls, path, required_type, type_exception, path_exception):
         cls.validate_list_type(path, str)
         cls.validate_required_type(required_type)
+        cls.validate_exception_condition(type_exception, path_exception)
+
+    @staticmethod
+    def validate_exception_condition(type_exception, path_exception):
+        if not isinstance(type_exception, bool) or \
+                not isinstance(path_exception, bool):
+            raise TypeError
 
     @staticmethod
     def validate_required_type(required_type):
@@ -109,10 +116,11 @@ class ModelFactory:
 
 
 class Example(Dict2Model):
-    a = Dict2Model.source(path=['random'], required_type=int, type_exception=False, path_exception=False)
+    a = Dict2Model.source(path=['random'], required_type=int, type_exception='False', path_exception=False)
     b = Dict2Model.source(path=['j'], required_type=int, type_exception=False, path_exception=False)
 
 
 example2 = ModelFactory(Example).use({'a': 3, 'j': 3})
 print(example2.a, example2.b)
 print(Example.__dict__)
+print(example2)
